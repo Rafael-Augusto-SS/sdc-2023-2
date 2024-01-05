@@ -5,10 +5,7 @@ defmodule Crud do
   1. Criar uma nova coordenada
   2. Listar as coordenadas
   3. Atualizar uma coordenada
-  4      5 -> menu(translacao(lista))
-      6 -> menu(escala(lista))
-      7 -> menu(reflecao(lista))
-      8 -> menu(deslizamento(lista)). Excluir uma coordenada
+  4. Excluir uma coordenada
   5. Sair do sistema
   +++++++++++++++++++++++
   Entre com sua opção: "
