@@ -5,69 +5,61 @@ defmodule SistemaCrud do
 
   +++++++++++++++++++++++
 
-  1. Criar um ponto
-  2. Listar os pontos
-  3. Atualizar pontos
-  4. Excluir um ponto
-  5. Sair
+  1. Criar uma nova coordenada
+  2. Listar as coordenadas
+  3. Atualizar uma coordenada
+  4. Excluir uma coordenada
+  5. Sair do sistema
 
   +++++++++++++++++++++++
 
   Entre com sua opção: "
 
-
   def criar(lista) do
-    IO.puts("Criar")
-    coordenadas = IO.gets("Digite os pares de coordenadas x e y: ") |>
-    String.trim() |>
-    String.split() |>
-    Enum.map(&String.to_integer/1) |>
-    Enum.chunk_every(2, 2, :discard)
-
+    IO.puts("Função para criar uma nova coordenada.")
+    coordenadas = IO.gets("Digite os pares de coordenadas x e y (formato: x y): ") |> String.trim() |>
+    String.split() |> Enum.map(&String.to_integer/1) |> Enum.chunk_every(2, 2, :discard)
 
     IO.puts("Coordenadas criadas com sucesso.")
 
-    IO.puts("Método criar")
+    IO.puts("Função criar")
     IO.inspect(coordenadas ++ lista)
     coordenadas ++ lista
 
   end
 
   def listar(lista) do
-    IO.puts("Listar")
+    IO.puts("Função para listar as coordenadas.")
 
     Enum.each(lista, fn coordenadas ->
       IO.inspect(coordenadas)
     end)
 
-    IO.puts("Método listar")
+    IO.puts("Função listar")
     IO.inspect(lista)
-    lista
 
+    lista
   end
 
-  def alterar(lista) do
-    IO.puts("Alterar")
+  def atualizar(lista) do
+    IO.puts("Função Atualizar coordenada")
 
-    [x, y] = IO.gets("Digite o par que você deseja alterar (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
+    [x, y] = IO.gets("Digite o par que você deseja atualizar (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
 
     indice = Enum.find_index(lista, fn v -> v == [x, y] end)
-    #indice =
     IO.inspect(indice)
 
     [a, b] = IO.gets("Digite o novo par (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
 
     IO.inspect([a, b])
     nova_lista = List.replace_at(lista, indice, [a, b])
+
     lista = nova_lista
-
     lista
-
-
   end
 
   def excluir(lista) do
-    IO.puts("Excluir")
+    IO.puts("Função Excluir uma coordenada")
 
     IO.puts("Digite o par que você deseja excluir (formato: x y):")
     [x, y] = IO.gets("") |> String.trim() |> String.split() |> Enum.map(&String.to_integer/1)
@@ -78,39 +70,25 @@ defmodule SistemaCrud do
 
     lista = nova_lista
     lista
-
-
   end
 
+  def sair do
+    IO.puts("Desligando o Sistema CRUD")
+  end
 
   def menu(lista) do
-    op = IO.gets(@menu)
-    |> String.trim()
-    |> String.to_integer()
+    option = IO.gets(@menu) |> String.trim() |> String.to_integer()
 
-
-    case op do
-
+    case option do
       1 -> menu(criar(lista))
-
       2 -> menu(listar(lista))
-
-      3-> menu(alterar(lista))
-
+      3 -> menu(atualizar(lista))
       4 -> menu(excluir(lista))
-
-      5 -> IO.puts("Até logo")
-
+      5 -> sair()
       _ -> IO.puts("Opção inválida")
-          menu(lista)
-
-
+      _ -> menu(lista)
     end
-
-
   end
-
-
 end
 
 Sistema.menu([])
