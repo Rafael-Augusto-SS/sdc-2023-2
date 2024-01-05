@@ -79,4 +79,4 @@ defmodule Crud do
   end
 end
 
-SistemaCrud.menu([])
+Crud.menu([])
