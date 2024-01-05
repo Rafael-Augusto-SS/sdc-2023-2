@@ -5,12 +5,11 @@ defmodule Crud do
   1. Criar uma nova coordenada
   2. Listar as coordenadas
   3. Atualizar uma coordenada
-  4. Excluir uma coordenada
-  5. Translacao das coordenadas
-  6. Escala do polígono
-  7. Reflexão do polígono
-  8. Deslizamento
-  9. Sair do sistema
+  4      5 -> menu(translacao(lista))
+      6 -> menu(escala(lista))
+      7 -> menu(reflecao(lista))
+      8 -> menu(deslizamento(lista)). Excluir uma coordenada
+  5. Sair do sistema
   +++++++++++++++++++++++
   Entre com sua opção: "
 
@@ -63,3 +62,24 @@ defmodule Crud do
 
     nova_lista
   end
+
+  def sair do
+    IO.puts("Desligando o Sistema CRUD")
+  end
+
+  def menu(lista) do
+    option = IO.gets(@menu) |> String.trim() |> String.to_integer()
+
+    case option do
+      1 -> menu(criar(lista))
+      2 -> menu(listar(lista))
+      3 -> menu(atualizar(lista))
+      4 -> menu(excluir(lista))
+      5 -> sair()
+      _ -> IO.puts("Opção inválida")
+             menu(lista)
+    end
+  end
+end
+
+SistemaCrud.menu([])
