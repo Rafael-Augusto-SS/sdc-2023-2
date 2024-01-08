@@ -15,12 +15,11 @@ defmodule SistemaCrud do
   Entre com sua opção: "
 
   def criar(lista) do
-    coordenadas = IO.gets("Digite os pares de coordenadas x e y (formato: x y): ")
+    [x , y] = IO.gets("Digite os pares de coordenadas x e y (formato: x y): ")
       |> String.trim()
       |> String.split()
       |> Enum.map(&String.to_integer/1)
-      |> Enum.chunk_every(2, 2, :discard)
-
+    coordenadas = [{x , y}]
     IO.puts("Coordenadas criadas com sucesso.")
     IO.inspect(coordenadas ++ lista)
     coordenadas ++ lista
@@ -39,13 +38,13 @@ defmodule SistemaCrud do
 
     [x, y] = IO.gets("Digite o par que você deseja atualizar (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
 
-    indice = Enum.find_index(lista, fn v -> v == [x, y] end)
+    indice = Enum.find_index(lista, fn v -> v == {x, y} end)
     IO.inspect(indice)
 
     [a, b] = IO.gets("Digite o novo par (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
 
     IO.inspect([a, b])
-    nova_lista = List.replace_at(lista, indice, [a, b])
+    nova_lista = List.replace_at(lista, indice, {a, b})
 
     lista = nova_lista
     lista
@@ -54,12 +53,12 @@ defmodule SistemaCrud do
   def excluir(lista) do
     IO.puts("Função Excluir uma coordenada")
 
-    ponto = IO.gets("Digite o par que você deseja excluir (formato: x y):")
+    [x, y] = IO.gets("Digite o par que você deseja excluir (formato: x y):")
       |> String.trim()
       |> String.split()
       |> Enum.map(&String.to_integer/1)
 
-    nova_lista = lista |> List.delete(ponto) |> IO.inspect()
+    nova_lista = lista |> List.delete({x , y}) |> IO.inspect()
 
     nova_lista
   end
@@ -71,7 +70,7 @@ defmodule SistemaCrud do
       |> String.split()
       |> Enum.map(&String.to_integer/1)
 
-    transladar = fn [x, y] -> [x + dx, y + dy] end
+    transladar = fn {x, y} -> {x + dx, y + dy} end
 
     nova_lista = Enum.map(lista, transladar)
 
@@ -86,7 +85,7 @@ defmodule SistemaCrud do
       |> String.split()
       |> Enum.map(&String.to_integer/1)
 
-    escalar = fn [x, y] -> [x * sx, y * sy] end
+    escalar = fn {x, y} -> {x * sx, y * sy} end
 
     nova_lista = Enum.map(lista, escalar)
 
@@ -102,9 +101,9 @@ defmodule SistemaCrud do
     option1 = IO.gets("Entre com sua opção: ") |> String.trim() |> String.to_integer()
     refletir =
       case option1 do
-        1 -> fn [x, y] -> [x, -y] end
-        2 -> fn [x, y] -> [-x, y] end
-        3 -> fn [x, y] -> [-x, -y] end
+        1 -> fn {x, y} -> {x, -y} end
+        2 -> fn {x, y} -> {-x, y} end
+        3 -> fn {x, y} -> {-x, -y} end
         _ -> IO.puts("Opção inválida")
              reflecao(lista)
       end
@@ -130,8 +129,8 @@ defmodule SistemaCrud do
 
     deslizar =
       case option1 do
-        1 -> fn [x, y] -> [x + sh_x * y, y] end
-        2 -> fn [x, y] -> [x, y + sh_y * x] end
+        1 -> fn {x, y} -> {x + sh_x * y, y} end
+        2 -> fn {x, y} -> {x, y + sh_y * x} end
         _ -> IO.puts("Opção inválida")
              deslizamento(lista)
       end
