@@ -15,25 +15,30 @@ defmodule SistemaCrud do
   Entre com sua opção: "
 
   def criar(lista) do
-    [x , y] = IO.gets("Digite os pares de coordenadas x e y (formato: x y): ")
-      |> String.trim()
-      |> String.split()
-      |> Enum.map(&String.to_integer/1)
-    coordenadas = [{x , y}]
-    IO.puts("Coordenadas criadas com sucesso.")
-    IO.inspect(coordenadas ++ lista)
-    coordenadas ++ lista
+    Task.async(fn ->
+      [x, y] = IO.gets("Digite os pares de coordenadas x e y (formato: x y): ")
+        |> String.trim()
+        |> String.split()
+        |> Enum.map(&String.to_integer/1)
+      coordenadas = [{x, y}]
+      IO.puts("Coordenadas criadas com sucesso.")
+      IO.inspect(lista ++ coordenadas)
+      lista ++ coordenadas
+    end)
+    |> Task.await()
   end
 
   def listar(lista) do
+    Task.async(fn ->
     IO.puts("Função para listar as coordenadas.")
     Enum.each(lista, &IO.inspect/1)
-    IO.puts("Função listar")
-    IO.inspect(lista)
     lista
+    end)
+    |> Task.await()
   end
 
   def atualizar(lista) do
+    Task.async(fn ->
     IO.puts("Função Atualizar coordenada")
 
     [x, y] = IO.gets("Digite o par que você deseja atualizar (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
@@ -48,10 +53,13 @@ defmodule SistemaCrud do
 
     lista = nova_lista
     lista
+    end)
+    |> Task.await()
   end
 
   def excluir(lista) do
-    IO.puts("Função Excluir uma coordenada")
+    Task.async(fn ->
+      IO.puts("Função Excluir uma coordenada")
 
     [x, y] = IO.gets("Digite o par que você deseja excluir (formato: x y):")
       |> String.trim()
@@ -61,9 +69,12 @@ defmodule SistemaCrud do
     nova_lista = lista |> List.delete({x , y}) |> IO.inspect()
 
     nova_lista
+    end)
+    |> Task.await()
   end
 
   def translacao(lista) do
+    Task.async(fn ->
     IO.puts("Função para realizar a translacao.")
     [dx, dy] = IO.gets("Digite os valores de translação (formato: dx dy): ")
       |> String.trim()
@@ -76,9 +87,12 @@ defmodule SistemaCrud do
 
     IO.inspect(nova_lista)
     nova_lista
+    end)
+    |> Task.await()
   end
 
   def escala(lista) do
+    Task.async(fn ->
     IO.puts("Função para mudar escala do polígono.")
     [sx, sy] = IO.gets("Digite os fatores de escala (formato: sx sy): ")
       |> String.trim()
@@ -91,9 +105,12 @@ defmodule SistemaCrud do
 
     IO.inspect(nova_lista)
     nova_lista
+    end)
+    |> Task.await()
   end
 
   def reflecao(lista) do
+    Task.async(fn ->
     IO.puts("Função para refletir um polígono.")
     IO.puts("1. Reflexão ao longo do eixo X")
     IO.puts("2. Reflexão ao longo do eixo Y")
@@ -112,9 +129,12 @@ defmodule SistemaCrud do
 
     IO.inspect(nova_lista)
     nova_lista
+    end)
+    |> Task.await()
   end
 
   def deslizamento(lista) do
+    Task.async(fn ->
     IO.puts("Função para realizar uma distorção na direção de X ou Y")
     IO.puts("1. Distorção na direção X")
     IO.puts("2. Distorção na direção Y")
@@ -139,6 +159,8 @@ defmodule SistemaCrud do
 
     IO.inspect(nova_lista)
     nova_lista
+    end)
+    |> Task.await()
   end
 
 
@@ -150,17 +172,35 @@ defmodule SistemaCrud do
     option = IO.gets(@menu) |> String.trim() |> String.to_integer()
 
     case option do
-      1 -> menu(criar(lista))
-      2 -> menu(listar(lista))
-      3 -> menu(atualizar(lista))
-      4 -> menu(excluir(lista))
-      5 -> menu(translacao(lista))
-      6 -> menu(escala(lista))
-      7 -> menu(reflecao(lista))
-      8 -> menu(deslizamento(lista))
-      9 -> sair()
-      _ -> IO.puts("Opção inválida")
-             menu(lista)
+      1 ->
+        lista = criar(lista)
+        menu(lista)
+      2 ->
+        lista = listar(lista)
+        menu(lista)
+      3 ->
+        lista = atualizar(lista)
+        menu(lista)
+      4 ->
+        lista = excluir(lista)
+        menu(lista)
+      5 ->
+        lista = translacao(lista)
+        menu(lista)
+      6 ->
+        lista = escala(lista)
+        menu(lista)
+      7 ->
+        lista = reflecao(lista)
+        menu(lista)
+      8 ->
+        lista = deslizamento(lista)
+        menu(lista)
+      9 ->
+        sair()
+      _ ->
+        IO.puts("Opção inválida")
+        menu(lista)
     end
   end
 end

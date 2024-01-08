@@ -17,8 +17,8 @@ defmodule Crud do
       |> Enum.map(&String.to_integer/1)
     coordenadas = [{x , y}]
     IO.puts("Coordenadas criadas com sucesso.")
-    IO.inspect(coordenadas ++ lista)
-    coordenadas ++ lista
+    IO.inspect(lista ++ coordenadas)
+    lista ++ coordenadas
   end
 
   def listar(lista) do
