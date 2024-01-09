@@ -39,7 +39,7 @@ defmodule Crud do
 
     [a, b] = IO.gets("Digite o novo par (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
 
-    IO.inspect([a, b])
+    IO.inspect({a, b})
     nova_lista = List.replace_at(lista, indice, {a, b})
 
     lista = nova_lista
