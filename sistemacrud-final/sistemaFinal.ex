@@ -25,7 +25,7 @@ defmodule SistemaCrud do
       IO.inspect(lista ++ coordenadas)
       lista ++ coordenadas
     end)
-    |> Task.await()
+    |> Task.await(10_000)
   end
 
   def listar(lista) do
@@ -54,7 +54,7 @@ defmodule SistemaCrud do
     lista = nova_lista
     lista
     end)
-    |> Task.await()
+    |> Task.await(10_000)
   end
 
   def excluir(lista) do
@@ -70,7 +70,7 @@ defmodule SistemaCrud do
 
     nova_lista
     end)
-    |> Task.await()
+    |> Task.await(10_000)
   end
 
   def translacao(lista) do
@@ -88,7 +88,7 @@ defmodule SistemaCrud do
     IO.inspect(nova_lista)
     nova_lista
     end)
-    |> Task.await()
+    |> Task.await(10_000)
   end
 
   def escala(lista) do
@@ -106,7 +106,7 @@ defmodule SistemaCrud do
     IO.inspect(nova_lista)
     nova_lista
     end)
-    |> Task.await()
+    |> Task.await(10_000)
   end
 
   def reflecao(lista) do
@@ -130,7 +130,7 @@ defmodule SistemaCrud do
     IO.inspect(nova_lista)
     nova_lista
     end)
-    |> Task.await()
+    |> Task.await(10_000)
   end
 
   def deslizamento(lista) do
@@ -160,7 +160,7 @@ defmodule SistemaCrud do
     IO.inspect(nova_lista)
     nova_lista
     end)
-    |> Task.await()
+    |> Task.await(10_000)
   end
 
 
