@@ -15,30 +15,23 @@ defmodule SistemaCrud do
   Entre com sua opção: "
 
   def criar(lista) do
-    Task.async(fn ->
-      [x, y] = IO.gets("Digite os pares de coordenadas x e y (formato: x y): ")
-        |> String.trim()
-        |> String.split()
-        |> Enum.map(&String.to_integer/1)
-      coordenadas = [{x, y}]
-      IO.puts("Coordenadas criadas com sucesso.")
-      IO.inspect(lista ++ coordenadas)
-      lista ++ coordenadas
-    end)
-    |> Task.await(10_000)
+    [x, y] = IO.gets("Digite os pares de coordenadas x e y (formato: x y): ")
+      |> String.trim()
+      |> String.split()
+      |> Enum.map(&String.to_integer/1)
+    coordenadas = [{x, y}]
+    IO.puts("Coordenadas criadas com sucesso.")
+    IO.inspect(lista ++ coordenadas)
+    lista ++ coordenadas
   end
 
   def listar(lista) do
-    Task.async(fn ->
     IO.puts("Função para listar as coordenadas.")
     Enum.each(lista, &IO.inspect/1)
     lista
-    end)
-    |> Task.await()
   end
 
   def atualizar(lista) do
-    Task.async(fn ->
     IO.puts("Função Atualizar coordenada")
 
     [x, y] = IO.gets("Digite o par que você deseja atualizar (formato: x y):") |> String.trim |> String.split() |> Enum.map(&String.to_integer/1)
@@ -53,13 +46,10 @@ defmodule SistemaCrud do
 
     lista = nova_lista
     lista
-    end)
-    |> Task.await(10_000)
   end
 
   def excluir(lista) do
-    Task.async(fn ->
-      IO.puts("Função Excluir uma coordenada")
+    IO.puts("Função Excluir uma coordenada")
 
     [x, y] = IO.gets("Digite o par que você deseja excluir (formato: x y):")
       |> String.trim()
@@ -69,12 +59,9 @@ defmodule SistemaCrud do
     nova_lista = lista |> List.delete({x , y}) |> IO.inspect()
 
     nova_lista
-    end)
-    |> Task.await(10_000)
   end
 
   def translacao(lista) do
-    Task.async(fn ->
     IO.puts("Função para realizar a translacao.")
     [dx, dy] = IO.gets("Digite os valores de translação (formato: dx dy): ")
       |> String.trim()
@@ -82,17 +69,12 @@ defmodule SistemaCrud do
       |> Enum.map(&String.to_integer/1)
 
     transladar = fn {x, y} -> {x + dx, y + dy} end
-
-    nova_lista = Enum.map(lista, transladar)
-
-    IO.inspect(nova_lista)
-    nova_lista
-    end)
-    |> Task.await(10_000)
+    tarefa = Task.async(fn -> Enum.map(lista, transladar) end) |> Task.await()
+    IO.inspect(tarefa)
+    tarefa
   end
 
   def escala(lista) do
-    Task.async(fn ->
     IO.puts("Função para mudar escala do polígono.")
     [sx, sy] = IO.gets("Digite os fatores de escala (formato: sx sy): ")
       |> String.trim()
@@ -100,45 +82,36 @@ defmodule SistemaCrud do
       |> Enum.map(&String.to_integer/1)
 
     escalar = fn {x, y} -> {x * sx, y * sy} end
-
-    nova_lista = Enum.map(lista, escalar)
-
-    IO.inspect(nova_lista)
-    nova_lista
-    end)
-    |> Task.await(10_000)
+    tarefa = Task.async(fn -> Enum.map(lista, escalar) end) |> Task.await()
+    IO.inspect(tarefa)
+    tarefa
   end
 
-  def reflecao(lista) do
-    Task.async(fn ->
+  def reflexao(lista) do
     IO.puts("Função para refletir um polígono.")
     IO.puts("1. Reflexão ao longo do eixo X")
     IO.puts("2. Reflexão ao longo do eixo Y")
     IO.puts("3. Reflexão ao longo dos 2 eixos: XY")
     option1 = IO.gets("Entre com sua opção: ") |> String.trim() |> String.to_integer()
+
     refletir =
       case option1 do
         1 -> fn {x, y} -> {x, -y} end
         2 -> fn {x, y} -> {-x, y} end
         3 -> fn {x, y} -> {-x, -y} end
         _ -> IO.puts("Opção inválida")
-             reflecao(lista)
+             reflexao(lista)
       end
 
-    nova_lista = Enum.map(lista, refletir)
-
-    IO.inspect(nova_lista)
-    nova_lista
-    end)
-    |> Task.await(10_000)
+      tarefa = Task.async(fn -> Enum.map(lista, refletir) end) |> Task.await()
+      IO.inspect(tarefa)
+      tarefa
   end
 
   def deslizamento(lista) do
-    Task.async(fn ->
     IO.puts("Função para realizar uma distorção na direção de X ou Y")
     IO.puts("1. Distorção na direção X")
     IO.puts("2. Distorção na direção Y")
-
     option1 = IO.gets("Entre com sua opção: ") |> String.trim() |> String.to_integer()
 
     [sh_x, sh_y] =
@@ -154,13 +127,11 @@ defmodule SistemaCrud do
         _ -> IO.puts("Opção inválida")
              deslizamento(lista)
       end
+      
+    tarefa = Task.async(fn -> Enum.map(lista, deslizar) end) |> Task.await()
+    IO.inspect(tarefa)
+    tarefa
 
-    nova_lista = Enum.map(lista, deslizar)
-
-    IO.inspect(nova_lista)
-    nova_lista
-    end)
-    |> Task.await(10_000)
   end
 
 
@@ -191,7 +162,7 @@ defmodule SistemaCrud do
         lista = escala(lista)
         menu(lista)
       7 ->
-        lista = reflecao(lista)
+        lista = reflexao(lista)
         menu(lista)
       8 ->
         lista = deslizamento(lista)
